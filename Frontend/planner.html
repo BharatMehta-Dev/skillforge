@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Skill Planner - SkillForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">⚡</span>
+        SkillForge
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+        <a href="login.html" class="btn btn-outline">Login</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <h1>🗺️ AI Skill Planner</h1>
+    <p>Generate personalized learning roadmaps or create your own custom study plans with reminders.</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="page-content">
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button class="tab active" data-tab="aiPlanner">AI Generated Plan</button>
+        <button class="tab" data-tab="manualPlanner">Manual Planner</button>
+      </div>
+
+      <!-- AI Planner Tab -->
+      <div class="tab-content active" id="aiPlanner">
+        <div class="card">
+          <h2 class="card-title">Generate Learning Roadmap</h2>
+          <form id="aiPlannerForm">
+            <div class="form-group">
+              <label class="form-label" for="targetSkill">Target Skill</label>
+              <select id="targetSkill" class="form-select" required>
+                <option value="">Select a skill...</option>
+                <option value="web development">Web Development</option>
+                <option value="data science">Data Science</option>
+                <option value="machine learning">Machine Learning</option>
+                <option value="react">React</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Generate Roadmap
+            </button>
+          </form>
+        </div>
+
+        <!-- Roadmap Results -->
+        <div class="results-section" id="roadmapResults" style="display: none;">
+          <div class="card">
+            <div class="flex justify-between items-center mb-20">
+              <h2 class="card-title" style="margin-bottom: 0;">
+                <span id="roadmapSkillName">Web Development</span> Roadmap
+              </h2>
+              <button class="btn btn-outline btn-sm" id="saveRoadmapBtn">
+                Save Plan
+              </button>
+            </div>
+            
+            <div class="timeline" id="roadmapTimeline"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Planner Tab -->
+      <div class="tab-content" id="manualPlanner">
+        <div class="card mb-20">
+          <h2 class="card-title">Add New Task</h2>
+          <form id="taskForm">
+            <div class="form-group">
+              <label class="form-label" for="taskTitle">Task Title</label>
+              <input 
+                type="text" 
+                id="taskTitle" 
+                class="form-input" 
+                placeholder="e.g., Complete JavaScript basics"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="taskDeadline">Deadline</label>
+              <input 
+                type="datetime-local" 
+                id="taskDeadline" 
+                class="form-input"
+                required
+              >
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Add Task
+            </button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="flex justify-between items-center mb-20">
+            <h2 class="card-title" style="margin-bottom: 0;">Your Tasks</h2>
+            <button class="btn btn-outline btn-sm" id="clearCompletedBtn">
+              Clear Completed
+            </button>
+          </div>
+          
+          <div class="task-list" id="taskList">
+            <p style="text-align: center; color: var(--text-light); padding: 40px;">
+              No tasks yet. Add your first task above!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-overlay" id="loadingState" style="display: none;">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+  <script>
+    // Initialize tabs
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabsContainer = document.querySelector('.tabs-container');
+      initTabs(tabsContainer);
+      renderTasks();
+    });
+    
+    // AI Planner Form
+    const aiPlannerForm = document.getElementById('aiPlannerForm');
+    const roadmapResults = document.getElementById('roadmapResults');
+    const loadingState = document.getElementById('loadingState');
+    let currentRoadmap = null;
+    
+    aiPlannerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const targetSkill = document.getElementById('targetSkill').value;
+      
+      if (!targetSkill) {
+        showToast('Error', 'Please select a target skill', 'error');
+        return;
+      }
+      
+      // Show loading
+      roadmapResults.style.display = 'none';
+      loadingState.style.display = 'flex';
+      
+      (async () => {
+  try {
+    const roadmapText = await generatePlan(targetSkill);
+
+    // Convert AI text into simple tasks
+    const roadmap = [{
+      week: "AI Generated Plan",
+      title: targetSkill,
+      tasks: roadmapText.split("\n").filter(line => line.trim() !== "")
+    }];
+
+    currentRoadmap = { skill: targetSkill, roadmap };
+
+    displayRoadmap(targetSkill, roadmap);
+
+    loadingState.style.display = 'none';
+    roadmapResults.style.display = 'block';
+
+    showToast('Roadmap Generated', `Created learning plan for ${targetSkill}`, 'success');
+
+  } catch (err) {
+    loadingState.style.display = 'none';
+    showToast('Error', 'Failed to generate roadmap', 'error');
+  }
+})();
+    });
+    
+    function displayRoadmap(skill, roadmap) {
+      document.getElementById('roadmapSkillName').textContent = skill.charAt(0).toUpperCase() + skill.slice(1);
+      
+      const timeline = document.getElementById('roadmapTimeline');
+      timeline.innerHTML = roadmap.map((phase, index) => `
+        <div class="timeline-item ${index === 0 ? 'completed' : ''}">
+          <div class="timeline-week">${phase.week}</div>
+          <div class="timeline-content">
+            <h4 style="margin-bottom: 12px;">${phase.title}</h4>
+            ${phase.tasks.map(task => `
+              <div class="timeline-task">
+                <input type="checkbox" class="task-checkbox" ${index === 0 ? 'checked' : ''}>
+                <span>${task}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Save Roadmap Button
+    document.getElementById('saveRoadmapBtn').addEventListener('click', () => {
+      if (currentRoadmap) {
+        savePlan(currentRoadmap.skill, currentRoadmap.roadmap);
+        showToast('Plan Saved', 'Your learning plan has been saved to dashboard', 'success');
+      }
+    });
+    
+    // Manual Planner Form
+    const taskForm = document.getElementById('taskForm');
+    
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const title = document.getElementById('taskTitle').value.trim();
+      const deadline = document.getElementById('taskDeadline').value;
+      
+      if (!title) {
+        showToast('Error', 'Please enter a task title', 'error');
+        return;
+      }
+      
+      if (!deadline) {
+        showToast('Error', 'Please set a deadline', 'error');
+        return;
+      }
+      
+      addTask(title, deadline);
+      renderTasks();
+      taskForm.reset();
+      
+      showToast('Task Added', 'Your task has been added with a reminder', 'success');
+    });
+    
+    // Render Tasks
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      
+      if (tasks.length === 0) {
+        taskList.innerHTML = `
+          <p style="text-align: center; color: var(--text-light); padding: 40px;">
+            No tasks yet. Add your first task above!
+          </p>
+        `;
+        return;
+      }
+      
+      // Sort by deadline
+      const sortedTasks = [...tasks].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+      
+      taskList.innerHTML = sortedTasks.map(task => {
+        const deadline = new Date(task.deadline);
+        const now = new Date();
+        const timeDiff = deadline - now;
+        const isUrgent = timeDiff > 0 && timeDiff < 24 * 60 * 60 * 1000;
+        const isPast = timeDiff < 0;
+        
+        return `
+          <div class="task-item">
+            <input 
+              type="checkbox" 
+              class="task-checkbox" 
+              ${task.completed ? 'checked' : ''} 
+              onchange="handleToggleTask(${task.id})"
+            >
+            <div class="task-content">
+              <div class="task-title ${task.completed ? 'completed' : ''}">${task.title}</div>
+              <div class="task-deadline ${isUrgent ? 'urgent' : ''} ${isPast && !task.completed ? 'urgent' : ''}">
+                ${isPast && !task.completed ? '⚠️ Overdue: ' : isUrgent ? '⏰ Due soon: ' : '📅 '}
+                ${deadline.toLocaleString()}
+              </div>
+            </div>
+            <div class="task-actions">
+              <button class="btn btn-icon btn-outline" onclick="handleDeleteTask(${task.id})" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function handleToggleTask(id) {
+      toggleTask(id);
+      renderTasks();
+      showToast('Task Updated', 'Task status has been updated', 'info');
+    }
+    
+    function handleDeleteTask(id) {
+      deleteTask(id);
+      renderTasks();
+      showToast('Task Deleted', 'Task has been removed', 'info');
+    }
+    
+    // Clear Completed Button
+    document.getElementById('clearCompletedBtn').addEventListener('click', () => {
+      const completedCount = tasks.filter(t => t.completed).length;
+      
+      if (completedCount === 0) {
+        showToast('Info', 'No completed tasks to clear', 'info');
+        return;
+      }
+      
+      tasks = tasks.filter(t => !t.completed);
+      saveTasks();
+      renderTasks();
+      showToast('Cleared', `Removed ${completedCount} completed tasks`, 'success');
+    });
+  </script>
+</body>
+</html>

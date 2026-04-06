@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SkillForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">⚡</span>
+        SkillForge
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+        <a href="login.html" class="btn btn-outline">Login</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <h1>📊 Your Dashboard</h1>
+    <p>Track your progress, view saved plans, and manage your learning journey.</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="page-content">
+    <!-- Stats Grid -->
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">📚</span>
+        </div>
+        <div class="stat-value" id="totalPlans">0</div>
+        <div class="stat-label">Saved Plans</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">✅</span>
+        </div>
+        <div class="stat-value" id="completedTasks">0</div>
+        <div class="stat-label">Completed Tasks</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">⏳</span>
+        </div>
+        <div class="stat-value" id="pendingTasks">0</div>
+        <div class="stat-label">Pending Tasks</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">🔥</span>
+        </div>
+        <div class="stat-value" id="streakDays">7</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="dashboard-grid mt-40">
+      <div class="card">
+        <h3 class="card-title">Weekly Activity</h3>
+        <div class="chart-container" id="weeklyChart">
+          <div class="chart-bar" style="height: 40%;" data-day="Mon"></div>
+          <div class="chart-bar" style="height: 60%;" data-day="Tue"></div>
+          <div class="chart-bar" style="height: 80%;" data-day="Wed"></div>
+          <div class="chart-bar" style="height: 45%;" data-day="Thu"></div>
+          <div class="chart-bar" style="height: 90%;" data-day="Fri"></div>
+          <div class="chart-bar" style="height: 30%;" data-day="Sat"></div>
+          <div class="chart-bar" style="height: 55%;" data-day="Sun"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 12px; color: var(--text-light); font-size: 0.8rem;">
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+          <span>Sun</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3 class="card-title">Skill Progress</h3>
+        <div class="progress-item">
+          <div style="display: flex; justify-content: space-between;">
+            <span>JavaScript</span>
+            <span>85%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 85%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div style="display: flex; justify-content: space-between;">
+            <span>React</span>
+            <span>70%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 70%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Node.js</span>
+            <span>55%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 55%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Python</span>
+            <span>40%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 40%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Plans Section -->
+    <div class="card mt-40">
+      <div class="flex justify-between items-center mb-20">
+        <h3 class="card-title" style="margin-bottom: 0;">Saved Learning Plans</h3>
+        <a href="planner.html" class="btn btn-primary btn-sm">Create New Plan</a>
+      </div>
+      <div id="savedPlansContainer">
+        <p style="text-align: center; color: var(--text-light); padding: 40px;">
+          No saved plans yet. Create your first learning roadmap!
+        </p>
+      </div>
+    </div>
+
+    <!-- Recent Tasks Section -->
+    <div class="card mt-40">
+      <div class="flex justify-between items-center mb-20">
+        <h3 class="card-title" style="margin-bottom: 0;">Recent Tasks</h3>
+        <a href="planner.html" class="btn btn-outline btn-sm">View All</a>
+      </div>
+      <div class="task-list" id="recentTasksContainer">
+        <p style="text-align: center; color: var(--text-light); padding: 40px;">
+          No tasks yet. Start planning your learning journey!
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mt-40">
+      <h3 class="card-title">Quick Actions</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <a href="skill-analyzer.html" class="btn btn-outline">
+          🔍 Analyze a Skill
+        </a>
+        <a href="gap-analyzer.html" class="btn btn-outline">
+          📈 Find Skill Gaps
+        </a>
+        <a href="planner.html" class="btn btn-outline">
+          🗺️ Create Roadmap
+        </a>
+        <button class="btn btn-outline" onclick="exportData()">
+          📥 Export Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+  <script>
+    // Load dashboard data
+    document.addEventListener('DOMContentLoaded', () => {
+      updateStats();
+      loadSavedPlans();
+      loadRecentTasks();
+    });
+    
+    function updateStats() {
+      const plans = loadFromStorage('skillforge_plans', []);
+      const allTasks = loadFromStorage('skillforge_tasks', []);
+      
+      const completedTasks = allTasks.filter(t => t.completed).length;
+      const pendingTasks = allTasks.filter(t => !t.completed).length;
+      
+      document.getElementById('totalPlans').textContent = plans.length;
+      document.getElementById('completedTasks').textContent = completedTasks;
+      document.getElementById('pendingTasks').textContent = pendingTasks;
+    }
+    
+    function loadSavedPlans() {
+      const plans = loadFromStorage('skillforge_plans', []);
+      const container = document.getElementById('savedPlansContainer');
+      
+      if (plans.length === 0) {
+        container.innerHTML = `
+          <p style="text-align: center; color: var(--text-light); padding: 40px;">
+            No saved plans yet. Create your first learning roadmap!
+          </p>
+        `;
+        return;
+      }
+      
+      container.innerHTML = `
+        <div style="display: grid; gap: 16px;">
+          ${plans.map(plan => `
+            <div class="task-item">
+              <div class="result-icon" style="width: 40px; height: 40px; font-size: 1.2rem;">🗺️</div>
+              <div class="task-content">
+                <div class="task-title">${plan.skill.charAt(0).toUpperCase() + plan.skill.slice(1)} Roadmap</div>
+                <div class="task-deadline">Created: ${new Date(plan.createdAt).toLocaleDateString()}</div>
+              </div>
+              <div class="task-actions">
+                <button class="btn btn-sm btn-outline" onclick="viewPlan('${plan.skill}')">View</button>
+                <button class="btn btn-sm btn-icon btn-outline" onclick="deletePlan(${plan.id})" title="Delete">🗑️</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    function loadRecentTasks() {
+      const allTasks = loadFromStorage('skillforge_tasks', []);
+      const container = document.getElementById('recentTasksContainer');
+      
+      if (allTasks.length === 0) {
+        container.innerHTML = `
+          <p style="text-align: center; color: var(--text-light); padding: 40px;">
+            No tasks yet. Start planning your learning journey!
+          </p>
+        `;
+        return;
+      }
+      
+      // Get 5 most recent tasks
+      const recentTasks = allTasks.slice(-5).reverse();
+      
+      container.innerHTML = recentTasks.map(task => {
+        const deadline = new Date(task.deadline);
+        return `
+          <div class="task-item">
+            <input 
+              type="checkbox" 
+              class="task-checkbox" 
+              ${task.completed ? 'checked' : ''} 
+              onchange="quickToggleTask(${task.id})"
+            >
+            <div class="task-content">
+              <div class="task-title ${task.completed ? 'completed' : ''}">${task.title}</div>
+              <div class="task-deadline">📅 ${deadline.toLocaleString()}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function quickToggleTask(id) {
+      toggleTask(id);
+      updateStats();
+      loadRecentTasks();
+      showToast('Task Updated', 'Task status has been updated', 'success');
+    }
+    
+    function viewPlan(skill) {
+      window.location.href = `planner.html?skill=${encodeURIComponent(skill)}`;
+    }
+    
+    function deletePlan(id) {
+      let plans = loadFromStorage('skillforge_plans', []);
+      plans = plans.filter(p => p.id !== id);
+      saveToStorage('skillforge_plans', plans);
+      loadSavedPlans();
+      updateStats();
+      showToast('Plan Deleted', 'Learning plan has been removed', 'info');
+    }
+    
+    function exportData() {
+      const data = {
+        plans: loadFromStorage('skillforge_plans', []),
+        tasks: loadFromStorage('skillforge_tasks', []),
+        exportedAt: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'skillforge-data.json';
+      a.click();
+      
+      URL.revokeObjectURL(url);
+      showToast('Data Exported', 'Your data has been downloaded', 'success');
+    }
+  </script>
+</body>
+</html>

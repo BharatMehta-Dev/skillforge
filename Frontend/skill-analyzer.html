@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>AI Skill Analyzer</h1>
+    <p>Analyze any skill using AI</p>
+  </div>
+
+  <div class="page-content">
+
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Enter Skill</label>
+        <input type="text" id="skillInput" class="form-input" placeholder="e.g. React, Python">
+      </div>
+
+      <button class="btn btn-primary" onclick="analyzeSkill()">Analyze Skill</button>
+    </div>
+
+    <div class="results-section" id="result"></div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

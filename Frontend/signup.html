@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - SkillForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">⚡</span>
+        SkillForge
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </div>
+
+  <!-- Signup Form -->
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Start your skill development journey today</p>
+      </div>
+      
+      <form id="signupForm">
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            class="form-input" 
+            placeholder="John Doe"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input" 
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div style="position: relative;">
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input" 
+              placeholder="Create a password"
+              required
+            >
+            <button 
+              type="button" 
+              id="togglePassword"
+              style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;"
+            >👁️</button>
+          </div>
+          <div id="passwordStrength" style="margin-top: 8px;"></div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            class="form-input" 
+            placeholder="Confirm your password"
+            required
+          >
+        </div>
+        
+        <div style="margin-bottom: 24px;">
+          <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="terms" style="accent-color: var(--primary); margin-top: 4px;" required>
+            <span style="font-size: 0.9rem; color: var(--text-light);">
+              I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> 
+              and <a href="#" style="color: var(--primary);">Privacy Policy</a>
+            </span>
+          </label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Create Account
+        </button>
+      </form>
+      
+      <div class="auth-footer">
+        <p>Already have an account? <a href="login.html">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+  <script>
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+    
+    // Password strength indicator
+    passwordInput.addEventListener('input', () => {
+      const password = passwordInput.value;
+      const strengthDiv = document.getElementById('passwordStrength');
+      
+      let strength = 0;
+      let label = '';
+      let color = '';
+      
+      if (password.length >= 6) strength++;
+      if (password.length >= 10) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      
+      if (password.length === 0) {
+        strengthDiv.innerHTML = '';
+        return;
+      } else if (strength <= 2) {
+        label = 'Weak';
+        color = 'var(--error)';
+      } else if (strength <= 3) {
+        label = 'Medium';
+        color = 'var(--warning)';
+      } else {
+        label = 'Strong';
+        color = 'var(--success)';
+      }
+      
+      strengthDiv.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
+            <div style="height: 100%; width: ${(strength / 5) * 100}%; background: ${color}; transition: width 0.3s;"></div>
+          </div>
+          <span style="font-size: 0.8rem; color: ${color};">${label}</span>
+        </div>
+      `;
+    });
+    
+    // Form submission
+    const signupForm = document.getElementById('signupForm');
+    
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const terms = document.getElementById('terms').checked;
+      
+      // Clear previous errors
+      ['name', 'email', 'password', 'confirmPassword'].forEach(id => {
+        clearError(document.getElementById(id));
+      });
+      
+      // Validate name
+      if (name.length < 2) {
+        showError(document.getElementById('name'), 'Name must be at least 2 characters');
+        return;
+      }
+      
+      // Validate email
+      if (!validateEmail(email)) {
+        showError(document.getElementById('email'), 'Please enter a valid email address');
+        return;
+      }
+      
+      // Validate password
+      if (password.length < 6) {
+        showError(document.getElementById('password'), 'Password must be at least 6 characters');
+        return;
+      }
+      
+      // Validate password match
+      if (password !== confirmPassword) {
+        showError(document.getElementById('confirmPassword'), 'Passwords do not match');
+        return;
+      }
+      
+      // Validate terms
+      if (!terms) {
+        showToast('Error', 'Please agree to the Terms of Service', 'error');
+        return;
+      }
+      
+      // Simulate signup (in a real app, this would be an API call)
+      showToast('Success', 'Account created successfully! Redirecting...', 'success');
+      
+      // Store user data
+      localStorage.setItem('skillforge_user', JSON.stringify({ name, email }));
+      
+      // Redirect to dashboard after a short delay
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
