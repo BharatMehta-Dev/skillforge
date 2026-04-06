@@ -13,7 +13,7 @@ async function analyzeSkill() {
   resultBox.innerText = "Analyzing...";
 
   try {
-    const res = await fetch("http://localhost:5000/analyze-skill", {
+    const res = await fetch("https://skillforge-api-d0wm.onrender.com/analyze-skill", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -52,7 +52,7 @@ async function analyzeGap() {
   resultBox.innerText = "Analyzing gap...";
 
   try {
-    const res = await fetch("http://localhost:5000/analyze-gap", {
+    const res = await fetch("https://skillforge-api-d0wm.onrender.com/analyze-gap", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -76,7 +76,7 @@ async function analyzeGap() {
 // ================= AI PLANNER =================
 async function generatePlan(skill) {
   try {
-    const res = await fetch("http://localhost:5000/generate-plan", {
+    const res = await fetch("https://skillforge-api-d0wm.onrender.com/generate-plan", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
