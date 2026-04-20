@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Skill Planner - SkillForge</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <!-- Navigation -->
@@ -16,13 +17,12 @@
       </a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="skill-analyzer.html">Skill Analyzer</a></li>
+        <li><a href="gap-analyzer.html">Gap Analyzer</a></li>
+        <li><a href="planner.html" class="active">Planner</a></li>
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
-        <a href="login.html" class="btn btn-outline">Login</a>
-        <a href="signup.html" class="btn btn-primary">Sign Up</a>
       </div>
       <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
     </div>
@@ -32,10 +32,9 @@
   <div class="mobile-menu" id="mobileMenu">
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="login.html">Login</a></li>
-      <li><a href="signup.html">Sign Up</a></li>
+      <li><a href="skill-analyzer.html">Skill Analyzer</a></li>
+      <li><a href="gap-analyzer.html">Gap Analyzer</a></li>
+      <li><a href="planner.html">Planner</a></li>
     </ul>
   </div>
 
@@ -87,7 +86,7 @@
               </button>
             </div>
             
-            <div class="timeline" id="roadmapTimeline"></div>
+            <div class="markdown-body" id="roadmapTimeline"></div>
           </div>
         </div>
       </div>
@@ -181,16 +180,10 @@
   try {
     const roadmapText = await generatePlan(targetSkill);
 
-    // Convert AI text into simple tasks
-    const roadmap = [{
-      week: "AI Generated Plan",
-      title: targetSkill,
-      tasks: roadmapText.split("\n").filter(line => line.trim() !== "")
-    }];
+    // Just store text for roadmap
+    currentRoadmap = { skill: targetSkill, roadmapText };
 
-    currentRoadmap = { skill: targetSkill, roadmap };
-
-    displayRoadmap(targetSkill, roadmap);
+    displayRoadmap(targetSkill, roadmapText);
 
     loadingState.style.display = 'none';
     roadmapResults.style.display = 'block';
@@ -204,24 +197,11 @@
 })();
     });
     
-    function displayRoadmap(skill, roadmap) {
+    function displayRoadmap(skill, roadmapText) {
       document.getElementById('roadmapSkillName').textContent = skill.charAt(0).toUpperCase() + skill.slice(1);
       
       const timeline = document.getElementById('roadmapTimeline');
-      timeline.innerHTML = roadmap.map((phase, index) => `
-        <div class="timeline-item ${index === 0 ? 'completed' : ''}">
-          <div class="timeline-week">${phase.week}</div>
-          <div class="timeline-content">
-            <h4 style="margin-bottom: 12px;">${phase.title}</h4>
-            ${phase.tasks.map(task => `
-              <div class="timeline-task">
-                <input type="checkbox" class="task-checkbox" ${index === 0 ? 'checked' : ''}>
-                <span>${task}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
+      timeline.innerHTML = marked.parse(roadmapText);
     }
     
     // Save Roadmap Button

@@ -10,6 +10,7 @@ async function analyzeSkill() {
     return;
   }
 
+  resultBox.style.display = 'block';
   resultBox.innerText = "Analyzing...";
 
   try {
@@ -26,7 +27,7 @@ async function analyzeSkill() {
     if (data.error) {
       resultBox.innerText = "Error: " + data.error;
     } else {
-      resultBox.innerText = data.result;
+      resultBox.innerHTML = marked.parse(data.result);
     }
 
   } catch (err) {
@@ -49,6 +50,7 @@ async function analyzeGap() {
     return;
   }
 
+  resultBox.style.display = 'block';
   resultBox.innerText = "Analyzing gap...";
 
   try {
@@ -65,7 +67,7 @@ async function analyzeGap() {
     if (data.error) {
       resultBox.innerText = "Error: " + data.error;
     } else {
-      resultBox.innerText = data.result;
+      resultBox.innerHTML = marked.parse(data.result);
     }
 
   } catch (err) {

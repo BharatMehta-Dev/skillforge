@@ -4,9 +4,38 @@
   <meta charset="UTF-8">
   <title>Skill Analyzer</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">⚡</span>
+        SkillForge
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="skill-analyzer.html" class="active">Skill Analyzer</a></li>
+        <li><a href="gap-analyzer.html">Gap Analyzer</a></li>
+        <li><a href="planner.html">Planner</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    </div>
+  </nav>
 
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="skill-analyzer.html">Skill Analyzer</a></li>
+      <li><a href="gap-analyzer.html">Gap Analyzer</a></li>
+      <li><a href="planner.html">Planner</a></li>
+    </ul>
+  </div>
   <div class="page-header">
     <h1>AI Skill Analyzer</h1>
     <p>Analyze any skill using AI</p>
@@ -23,7 +52,7 @@
       <button class="btn btn-primary" onclick="analyzeSkill()">Analyze Skill</button>
     </div>
 
-    <div class="results-section" id="result"></div>
+    <div class="results-section markdown-body card" id="result" style="display: none; margin-top: 20px;"></div>
 
   </div>
 
